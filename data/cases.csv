@@ -1,0 +1,99 @@
+case_id,symptom,topology_note,show_outputs,expected_fault,osi_layer,concept_tag,severity
+C001,Two PCs on the same VLAN cannot reach each other and users report 'duplicate IP address' Windows popups.,"SW1 (VLAN 10, 192.168.10.0/24) connects PC-A (Fa0/1) and PC-B (Fa0/2). Both PCs were statically configured.","PC-A: 192.168.10.5/24 | PC-B: 192.168.10.5/24
+SW1# show ip arp
+Internet  192.168.10.5   -   aabb.cc00.0100  ARPA  Vlan10
+Internet  192.168.10.5   -   aabb.cc00.0200  ARPA  Vlan10",Duplicate IP address assigned to PC-A and PC-B,Layer 3,IP Addressing,High
+C002,PC-C can ping its default gateway but cannot reach any other subnet.,"PC-C is on VLAN 20 (192.168.20.0/24) connected to SW2, routed by R1 sub-interface Gi0/0.20.","PC-C: IP 192.168.20.50 Mask 255.255.255.0 Gateway 192.168.20.1
+R1# show ip interface brief
+GigabitEthernet0/0.20  192.168.20.1  YES manual up  up",Missing route on R1 for other VLAN subnets (no routing protocol or static route configured),Layer 3,Routing,Medium
+C003,"New host on VLAN 30 cannot communicate with any device, even devices in the same VLAN.",PC-D configured with 192.168.30.10/25 while the rest of VLAN 30 uses /24.,"PC-D: IP 192.168.30.10 Mask 255.255.255.128
+Other hosts: 192.168.30.0/24","Wrong subnet mask configured on PC-D (should be /24, is /25)",Layer 3,Subnetting,Medium
+C004,PC-E can ping local subnet devices but not the internet or remote subnets.,PC-E gateway configured as 192.168.40.254 but the router interface is 192.168.40.1.,"PC-E: IP 192.168.40.20 Gateway 192.168.40.254
+R2# show ip interface brief
+GigabitEthernet0/1  192.168.40.1  YES manual up  up",Gateway mismatch - PC-E points to 192.168.40.254 instead of the router's actual IP 192.168.40.1,Layer 3,Default Gateway,Medium
+C005,All devices connected to switch port Fa0/5 have no network connectivity.,SW3 Fa0/5 connects to the access layer switch uplink.,"SW3# show interfaces Fa0/5 status
+Port   Name  Status       Vlan  Duplex  Speed
+Fa0/5        disabled     10    auto    auto",Interface Fa0/5 administratively down (shutdown),Layer 1,Interface Status,High
+C006,Phones on VLAN 50 (voice VLAN) cannot get IP addresses via DHCP.,"SW4 access port Fa0/10 configured with data VLAN 10 only, no voice VLAN command applied.","SW4# show interfaces Fa0/10 switchport
+Administrative Mode: static access
+Access Mode VLAN: 10 (DATA)
+Voice VLAN: none",Missing VLAN - voice VLAN 50 not configured on the access port,Layer 2,VLAN,Medium
+C007,Trunk link between SW5 and SW6 is up but VLAN 60 traffic does not pass across it.,"SW5 Gi0/1 trunk allows VLANs 1,10,20,30,40,50. VLAN 60 was recently added.","SW5# show interfaces trunk
+Port  Vlans allowed on trunk
+Gi0/1 1,10,20,30,40,50",Missing VLAN 60 in the trunk allowed list on SW5 Gi0/1,Layer 2,Trunking,Medium
+C008,Branch office PCs cannot reach headquarters subnet 10.1.1.0/24.,Branch router R3 has no route toward HQ subnet; static routing is used in this topology.,"R3# show ip route
+Gateway of last resort is not set
+C  192.168.50.0/24 is directly connected, GigabitEthernet0/0",Missing static route to 10.1.1.0/24 on R3,Layer 3,Static Routing,High
+C009,"PC-F receives an IP address from the wrong subnet (169.254.x.x, APIPA).","PC-F is on VLAN 70, DHCP server is centralized and reachable via R4.","PC-F: IP 169.254.13.44 Mask 255.255.0.0
+R4# show run interface Gi0/0.70
+no ip helper-address configured","Missing 'ip helper-address' on the VLAN 70 sub-interface, DHCP requests not relayed",Layer 3,DHCP,High
+C010,Users can browse by IP address but websites do not load by name.,PC-G configured manually with an incorrect DNS server address.,"PC-G: DNS Server 8.8.4.4.1 (invalid format)
+ping 8.8.8.8 succeeds
+nslookup google.com times out",Incorrect/invalid DNS server IP configured on PC-G,Layer 7,DNS,Low
+C011,Internal hosts cannot reach the internet even though the router has a valid default route.,R5 provides internet access via NAT overload on Gi0/0 (outside).,"R5# show ip nat translations
+(no translations)
+R5# show run | include ip nat
+(no ip nat inside/outside statements found)",NAT not configured (missing 'ip nat inside'/'ip nat outside' and NAT overload statement),Layer 3,NAT,High
+C012,"Server 192.168.60.10 is unreachable from an external partner network, though it works from internal hosts.",R6 has an ACL applied to Gi0/1 (WAN) inbound to restrict traffic.,"R6# show access-lists
+Extended IP access list WAN-IN
+ 10 deny ip any host 192.168.60.10
+ 20 permit ip any any",ACL entry explicitly denies traffic to server 192.168.60.10,Layer 3,ACL,Medium
+C013,Wireless clients connect to the SSID but cannot obtain an IP address.,WLC manages AP1; wireless VLAN 80 is mapped to a dynamic interface.,"WLC# show interface summary
+Interface Name   VLAN   IP Address
+wireless-80      80     0.0.0.0 (not configured)",Wireless dynamic interface VLAN 80 has no IP address / DHCP scope configured,Layer 3,Wireless,Medium
+C014,Wireless clients frequently disconnect and roam poorly between AP1 and AP2.,AP1 and AP2 both broadcast SSID 'Corp-WiFi' but on overlapping channels 6 and 6.,"AP1: Channel 6, Power 5
+AP2: Channel 6, Power 5
+RF report shows high co-channel interference",Channel overlap between AP1 and AP2 causing interference,Layer 1,Wireless,Low
+C015,Two switches connected via redundant links experience a network-wide broadcast storm.,SW7 and SW8 are connected by two links; STP was disabled during a maintenance window.,"SW7# show spanning-tree summary
+Spanning tree enabled protocol ieee -- disabled on VLAN 10","Spanning Tree Protocol disabled on VLAN 10, causing a Layer 2 loop",Layer 2,STP,High
+C016,"OSPF neighbors between R7 and R8 never reach FULL state, stuck at 2-WAY.",R7 and R8 are on a shared Ethernet segment configured as OSPF area 0.,"R7# show ip ospf neighbor
+Neighbor ID  State      Interface
+10.0.0.8    2WAY/DROTHER  Gi0/0
+No DR/BDR elected on segment","OSPF DR/BDR election failure, likely due to interface priority set to 0 on both routers",Layer 3,OSPF,Medium
+C017,EIGRP routes to remote site disappear intermittently.,R9 and R10 are EIGRP neighbors over a WAN link with a mismatched K-value causing instability.,"R9# show ip eigrp neighbors
+(neighbor list empty, flapping)
+%DUAL-5-NBRCHANGE: EIGRP-IPv4 Neighbor down",EIGRP K-value mismatch between R9 and R10 preventing stable adjacency,Layer 3,EIGRP,High
+C018,PC-H on VLAN 90 gets an IP address but cannot ping its own default gateway.,"SW9 access port Fa0/15 assigned to VLAN 90, but VLAN 90 does not exist in the VLAN database.","SW9# show vlan brief
+(VLAN 90 not listed)
+SW9# show interfaces Fa0/15 switchport
+Access Mode VLAN: 90 (Inactive)",Missing VLAN - VLAN 90 not created in the switch VLAN database,Layer 2,VLAN,Medium
+C019,Remote users report the site-to-site VPN tunnel is down between HQ and branch.,R11 (HQ) and R12 (Branch) use an IPsec tunnel over the internet.,"R11# show crypto isakmp sa
+dst             src            state     conn-id
+(empty - no active SAs)","IPsec Phase 1 (ISAKMP) negotiation failing, likely mismatched pre-shared key",Layer 3,VPN,High
+C020,Users on VLAN 100 can reach internal servers but not the printer on VLAN 100 itself.,"Printer configured with static IP 192.168.100.99/24, same subnet as users.","Printer: IP 192.168.100.99 Mask 255.255.255.0
+SW10# show ip arp
+(no ARP entry learned for 192.168.100.99)
+SW10# show interfaces Fa0/20 status
+Fa0/20  notconnect  100  auto  auto",Interface down - printer's switch port Fa0/20 shows notconnect (cable/port issue),Layer 1,Interface Status,Low
+C021,"Two servers in the data center both respond to ARP requests for the same IP, causing intermittent connectivity.",Server-A and Server-B were both configured with 10.10.10.5 during a migration.,"Core-SW# show ip arp
+Internet 10.10.10.5  -  0011.2233.4455 ARPA Vlan200
+Internet 10.10.10.5  -  0011.2233.9999 ARPA Vlan200 (flapping)",Duplicate IP address between Server-A and Server-B,Layer 3,IP Addressing,High
+C022,Newly added subnet 172.16.5.0/24 cannot reach the rest of the network despite the router interface being up.,"R13 interface Gi0/2 is up/up on the new subnet, but no routing protocol advertises it.","R13# show ip protocols
+Routing Protocol is 'ospf 1'
+Routing for Networks: 172.16.0.0/16 not listed
+R13# show run interface Gi0/2
+ip address 172.16.5.1 255.255.255.0",Missing route/network statement - subnet 172.16.5.0/24 not included in OSPF network statements,Layer 3,Routing,Medium
+C023,"Users report that pings to the gateway work, but web browsing is very slow and times out often.",R14 has an access-list applied that unintentionally blocks TCP port 80/443 for a subnet.,"R14# show access-lists WEB-FILTER
+10 deny tcp any any eq 80
+20 deny tcp any any eq 443
+30 permit ip any any",ACL blocking HTTP/HTTPS traffic (ports 80 and 443) for the subnet,Layer 4,ACL,Medium
+C024,"PC-I is configured with a subnet mask of 255.255.255.192 while the rest of VLAN 110 uses 255.255.255.0, causing it to be unable to reach some local peers.",VLAN 110 subnet is 192.168.110.0/24; PC-I mistakenly got a /26 mask during manual setup.,"PC-I: IP 192.168.110.70 Mask 255.255.255.192
+Other hosts: 192.168.110.0/24",Wrong subnet mask on PC-I (/26 instead of /24),Layer 3,Subnetting,Low
+C025,"Guest wireless users can connect but see no internet access, while corporate wireless works fine.",Guest VLAN 120 is mapped on the WLC but the uplink trunk to the core switch does not carry VLAN 120.,"Core-SW# show interfaces trunk
+Port  Vlans allowed on trunk
+Gi1/0/1  1,10,80,90,100,110",Missing VLAN - Guest VLAN 120 not allowed on the trunk to the WLC uplink,Layer 2,VLAN,Medium
+C026,"PC-J cannot reach the DHCP server and manually configuring an IP works fine, but auto-config fails.","PC-J is on VLAN 130, DHCP server is local (same subnet) so no relay is needed.","SW11# show interfaces Fa0/25 status
+Fa0/25  disabled  130  auto  auto
+Port administratively shut down","Interface Fa0/25 administratively down, blocking DHCP broadcast to reach the server",Layer 1,Interface Status,Medium
+C027,Remote branch cannot resolve internal hostnames although external DNS resolution works fine.,Branch router R15 forwards DNS to public DNS only; internal DNS server 10.1.1.53 is not configured.,"R15# show run | include name-server
+ip name-server 8.8.8.8
+(internal DNS 10.1.1.53 missing)","Internal DNS server not configured/forwarded, only public DNS is set",Layer 7,DNS,Low
+C028,Internet access works for most internal hosts but fails specifically for the 192.168.70.0/24 subnet.,R16 performs NAT overload; the NAT ACL only matches some internal subnets.,"R16# show run | include access-list 1
+access-list 1 permit 192.168.10.0 0.0.0.255
+access-list 1 permit 192.168.20.0 0.0.0.255
+(192.168.70.0/24 not included)","NAT ACL missing the 192.168.70.0/24 subnet, so it is not translated",Layer 3,NAT,Medium
+C029,A newly deployed router at the branch cannot reach headquarters even though the WAN link shows up/up.,Branch router R17 static default route points to an incorrect next-hop IP typo'd during configuration.,"R17# show ip route
+S*  0.0.0.0/0 [1/0] via 203.0.113.99
+Actual ISP next hop should be 203.0.113.9",Gateway mismatch - static default route next-hop IP is mistyped (203.0.113.99 vs correct 203.0.113.9),Layer 3,Default Gateway,High
+C030,Video calls over Wi-Fi frequently freeze and drop for users near the edge of the building.,AP3 covering the far end of the building is set to very low transmit power relative to its coverage area.,"AP3: Tx Power Level 8 (lowest)
+Client RSSI values reported around -82 dBm (poor)","AP3 transmit power set too low for required coverage, causing weak signal and drops",Layer 1,Wireless,Medium

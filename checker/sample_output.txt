@@ -1,0 +1,239 @@
+--- Case C001: IP Addressing ---
+[FAIL] Duplicate IP Address: IP address(es) appear more than once in the output: 192.168.10.5
+[PASS] Subnet Mask: No suspicious subnet mask patterns detected.
+[PASS] Gateway Mismatch: No gateway/SVI IP pair found to compare (check not applicable to this case).
+[PASS] Interface Down: No down/administratively down/err-disabled interfaces detected.
+[PASS] Missing VLAN: No inactive VLAN references detected.
+[PASS] Missing Routes: No routing table output present to evaluate (check not applicable to this case).
+
+--- Case C002: Routing ---
+[FAIL] Duplicate IP Address: IP address(es) appear more than once in the output: 192.168.20.1
+[PASS] Subnet Mask: No suspicious subnet mask patterns detected.
+[PASS] Gateway Mismatch: No gateway/SVI IP pair found to compare (check not applicable to this case).
+[PASS] Interface Down: No down/administratively down/err-disabled interfaces detected.
+[PASS] Missing VLAN: No inactive VLAN references detected.
+[PASS] Missing Routes: No routing table output present to evaluate (check not applicable to this case).
+
+--- Case C003: Subnetting ---
+[PASS] Duplicate IP Address: No duplicate IP addresses detected in the show output.
+[PASS] Subnet Mask: No suspicious subnet mask patterns detected.
+[PASS] Gateway Mismatch: No gateway/SVI IP pair found to compare (check not applicable to this case).
+[PASS] Interface Down: No down/administratively down/err-disabled interfaces detected.
+[PASS] Missing VLAN: No inactive VLAN references detected.
+[PASS] Missing Routes: No routing table output present to evaluate (check not applicable to this case).
+
+--- Case C004: Default Gateway ---
+[PASS] Duplicate IP Address: No duplicate IP addresses detected in the show output.
+[PASS] Subnet Mask: No suspicious subnet mask patterns detected.
+[PASS] Gateway Mismatch: No gateway/SVI IP pair found to compare (check not applicable to this case).
+[PASS] Interface Down: No down/administratively down/err-disabled interfaces detected.
+[PASS] Missing VLAN: No inactive VLAN references detected.
+[PASS] Missing Routes: No routing table output present to evaluate (check not applicable to this case).
+
+--- Case C005: Interface Status ---
+[PASS] Duplicate IP Address: No duplicate IP addresses detected in the show output.
+[PASS] Subnet Mask: No suspicious subnet mask patterns detected.
+[PASS] Gateway Mismatch: No gateway/SVI IP pair found to compare (check not applicable to this case).
+[PASS] Interface Down: No down/administratively down/err-disabled interfaces detected.
+[PASS] Missing VLAN: No inactive VLAN references detected.
+[PASS] Missing Routes: No routing table output present to evaluate (check not applicable to this case).
+
+--- Case C006: VLAN ---
+[PASS] Duplicate IP Address: No duplicate IP addresses detected in the show output.
+[PASS] Subnet Mask: No suspicious subnet mask patterns detected.
+[PASS] Gateway Mismatch: No gateway/SVI IP pair found to compare (check not applicable to this case).
+[PASS] Interface Down: No down/administratively down/err-disabled interfaces detected.
+[PASS] Missing VLAN: No inactive VLAN references detected.
+[PASS] Missing Routes: No routing table output present to evaluate (check not applicable to this case).
+
+--- Case C007: Trunking ---
+[PASS] Duplicate IP Address: No duplicate IP addresses detected in the show output.
+[PASS] Subnet Mask: No suspicious subnet mask patterns detected.
+[PASS] Gateway Mismatch: No gateway/SVI IP pair found to compare (check not applicable to this case).
+[PASS] Interface Down: No down/administratively down/err-disabled interfaces detected.
+[PASS] Missing VLAN: No inactive VLAN references detected.
+[PASS] Missing Routes: No routing table output present to evaluate (check not applicable to this case).
+
+--- Case C008: Static Routing ---
+[PASS] Duplicate IP Address: No duplicate IP addresses detected in the show output.
+[PASS] Subnet Mask: No suspicious subnet mask patterns detected.
+[PASS] Gateway Mismatch: No gateway/SVI IP pair found to compare (check not applicable to this case).
+[PASS] Interface Down: No down/administratively down/err-disabled interfaces detected.
+[PASS] Missing VLAN: No inactive VLAN references detected.
+[FAIL] Missing Routes: Expected subnet(s) not found in the routing table: 10.1.1.0/24.
+
+--- Case C009: DHCP ---
+[PASS] Duplicate IP Address: No duplicate IP addresses detected in the show output.
+[PASS] Subnet Mask: No suspicious subnet mask patterns detected.
+[PASS] Gateway Mismatch: No gateway/SVI IP pair found to compare (check not applicable to this case).
+[PASS] Interface Down: No down/administratively down/err-disabled interfaces detected.
+[PASS] Missing VLAN: No inactive VLAN references detected.
+[PASS] Missing Routes: No routing table output present to evaluate (check not applicable to this case).
+
+--- Case C010: DNS ---
+[PASS] Duplicate IP Address: No duplicate IP addresses detected in the show output.
+[PASS] Subnet Mask: No suspicious subnet mask patterns detected.
+[PASS] Gateway Mismatch: No gateway/SVI IP pair found to compare (check not applicable to this case).
+[PASS] Interface Down: No down/administratively down/err-disabled interfaces detected.
+[PASS] Missing VLAN: No inactive VLAN references detected.
+[PASS] Missing Routes: No routing table output present to evaluate (check not applicable to this case).
+
+--- Case C011: NAT ---
+[PASS] Duplicate IP Address: No duplicate IP addresses detected in the show output.
+[PASS] Subnet Mask: No suspicious subnet mask patterns detected.
+[PASS] Gateway Mismatch: No gateway/SVI IP pair found to compare (check not applicable to this case).
+[PASS] Interface Down: No down/administratively down/err-disabled interfaces detected.
+[PASS] Missing VLAN: No inactive VLAN references detected.
+[PASS] Missing Routes: No routing table output present to evaluate (check not applicable to this case).
+
+--- Case C012: ACL ---
+[PASS] Duplicate IP Address: No duplicate IP addresses detected in the show output.
+[PASS] Subnet Mask: No suspicious subnet mask patterns detected.
+[PASS] Gateway Mismatch: No gateway/SVI IP pair found to compare (check not applicable to this case).
+[PASS] Interface Down: No down/administratively down/err-disabled interfaces detected.
+[PASS] Missing VLAN: No inactive VLAN references detected.
+[PASS] Missing Routes: No routing table output present to evaluate (check not applicable to this case).
+
+--- Case C013: Wireless ---
+[PASS] Duplicate IP Address: No duplicate IP addresses detected in the show output.
+[PASS] Subnet Mask: No suspicious subnet mask patterns detected.
+[PASS] Gateway Mismatch: No gateway/SVI IP pair found to compare (check not applicable to this case).
+[PASS] Interface Down: No down/administratively down/err-disabled interfaces detected.
+[PASS] Missing VLAN: No inactive VLAN references detected.
+[PASS] Missing Routes: No routing table output present to evaluate (check not applicable to this case).
+
+--- Case C014: Wireless ---
+[PASS] Duplicate IP Address: No duplicate IP addresses detected in the show output.
+[PASS] Subnet Mask: No suspicious subnet mask patterns detected.
+[PASS] Gateway Mismatch: No gateway/SVI IP pair found to compare (check not applicable to this case).
+[PASS] Interface Down: No down/administratively down/err-disabled interfaces detected.
+[PASS] Missing VLAN: No inactive VLAN references detected.
+[PASS] Missing Routes: No routing table output present to evaluate (check not applicable to this case).
+
+--- Case C015: STP ---
+[PASS] Duplicate IP Address: No duplicate IP addresses detected in the show output.
+[PASS] Subnet Mask: No suspicious subnet mask patterns detected.
+[PASS] Gateway Mismatch: No gateway/SVI IP pair found to compare (check not applicable to this case).
+[PASS] Interface Down: No down/administratively down/err-disabled interfaces detected.
+[PASS] Missing VLAN: No inactive VLAN references detected.
+[PASS] Missing Routes: No routing table output present to evaluate (check not applicable to this case).
+
+--- Case C016: OSPF ---
+[PASS] Duplicate IP Address: No duplicate IP addresses detected in the show output.
+[PASS] Subnet Mask: No suspicious subnet mask patterns detected.
+[PASS] Gateway Mismatch: No gateway/SVI IP pair found to compare (check not applicable to this case).
+[PASS] Interface Down: No down/administratively down/err-disabled interfaces detected.
+[PASS] Missing VLAN: No inactive VLAN references detected.
+[PASS] Missing Routes: No routing table output present to evaluate (check not applicable to this case).
+
+--- Case C017: EIGRP ---
+[PASS] Duplicate IP Address: No duplicate IP addresses detected in the show output.
+[PASS] Subnet Mask: No suspicious subnet mask patterns detected.
+[PASS] Gateway Mismatch: No gateway/SVI IP pair found to compare (check not applicable to this case).
+[PASS] Interface Down: No down/administratively down/err-disabled interfaces detected.
+[PASS] Missing VLAN: No inactive VLAN references detected.
+[PASS] Missing Routes: No routing table output present to evaluate (check not applicable to this case).
+
+--- Case C018: VLAN ---
+[PASS] Duplicate IP Address: No duplicate IP addresses detected in the show output.
+[PASS] Subnet Mask: No suspicious subnet mask patterns detected.
+[PASS] Gateway Mismatch: No gateway/SVI IP pair found to compare (check not applicable to this case).
+[PASS] Interface Down: No down/administratively down/err-disabled interfaces detected.
+[FAIL] Missing VLAN: A port references a VLAN that shows as 'inactive', suggesting the VLAN does not exist on the switch.
+[PASS] Missing Routes: No routing table output present to evaluate (check not applicable to this case).
+
+--- Case C019: VPN ---
+[PASS] Duplicate IP Address: No duplicate IP addresses detected in the show output.
+[PASS] Subnet Mask: No suspicious subnet mask patterns detected.
+[PASS] Gateway Mismatch: No gateway/SVI IP pair found to compare (check not applicable to this case).
+[PASS] Interface Down: No down/administratively down/err-disabled interfaces detected.
+[PASS] Missing VLAN: No inactive VLAN references detected.
+[PASS] Missing Routes: No routing table output present to evaluate (check not applicable to this case).
+
+--- Case C020: Interface Status ---
+[FAIL] Duplicate IP Address: IP address(es) appear more than once in the output: 192.168.100.99
+[PASS] Subnet Mask: No suspicious subnet mask patterns detected.
+[PASS] Gateway Mismatch: No gateway/SVI IP pair found to compare (check not applicable to this case).
+[FAIL] Interface Down: Interface state indicates a down condition: notconnect.
+[PASS] Missing VLAN: No inactive VLAN references detected.
+[PASS] Missing Routes: No routing table output present to evaluate (check not applicable to this case).
+
+--- Case C021: IP Addressing ---
+[FAIL] Duplicate IP Address: IP address(es) appear more than once in the output: 10.10.10.5
+[PASS] Subnet Mask: No suspicious subnet mask patterns detected.
+[PASS] Gateway Mismatch: No gateway/SVI IP pair found to compare (check not applicable to this case).
+[PASS] Interface Down: No down/administratively down/err-disabled interfaces detected.
+[PASS] Missing VLAN: No inactive VLAN references detected.
+[PASS] Missing Routes: No routing table output present to evaluate (check not applicable to this case).
+
+--- Case C022: Routing ---
+[PASS] Duplicate IP Address: No duplicate IP addresses detected in the show output.
+[PASS] Subnet Mask: No suspicious subnet mask patterns detected.
+[PASS] Gateway Mismatch: No gateway/SVI IP pair found to compare (check not applicable to this case).
+[PASS] Interface Down: No down/administratively down/err-disabled interfaces detected.
+[PASS] Missing VLAN: No inactive VLAN references detected.
+[PASS] Missing Routes: No routing table output present to evaluate (check not applicable to this case).
+
+--- Case C023: ACL ---
+[PASS] Duplicate IP Address: No duplicate IP addresses detected in the show output.
+[PASS] Subnet Mask: No suspicious subnet mask patterns detected.
+[PASS] Gateway Mismatch: No gateway/SVI IP pair found to compare (check not applicable to this case).
+[PASS] Interface Down: No down/administratively down/err-disabled interfaces detected.
+[PASS] Missing VLAN: No inactive VLAN references detected.
+[PASS] Missing Routes: No routing table output present to evaluate (check not applicable to this case).
+
+--- Case C024: Subnetting ---
+[PASS] Duplicate IP Address: No duplicate IP addresses detected in the show output.
+[PASS] Subnet Mask: No suspicious subnet mask patterns detected.
+[PASS] Gateway Mismatch: No gateway/SVI IP pair found to compare (check not applicable to this case).
+[PASS] Interface Down: No down/administratively down/err-disabled interfaces detected.
+[PASS] Missing VLAN: No inactive VLAN references detected.
+[PASS] Missing Routes: No routing table output present to evaluate (check not applicable to this case).
+
+--- Case C025: VLAN ---
+[PASS] Duplicate IP Address: No duplicate IP addresses detected in the show output.
+[PASS] Subnet Mask: No suspicious subnet mask patterns detected.
+[PASS] Gateway Mismatch: No gateway/SVI IP pair found to compare (check not applicable to this case).
+[PASS] Interface Down: No down/administratively down/err-disabled interfaces detected.
+[PASS] Missing VLAN: No inactive VLAN references detected.
+[PASS] Missing Routes: No routing table output present to evaluate (check not applicable to this case).
+
+--- Case C026: Interface Status ---
+[PASS] Duplicate IP Address: No duplicate IP addresses detected in the show output.
+[PASS] Subnet Mask: No suspicious subnet mask patterns detected.
+[PASS] Gateway Mismatch: No gateway/SVI IP pair found to compare (check not applicable to this case).
+[PASS] Interface Down: No down/administratively down/err-disabled interfaces detected.
+[PASS] Missing VLAN: No inactive VLAN references detected.
+[PASS] Missing Routes: No routing table output present to evaluate (check not applicable to this case).
+
+--- Case C027: DNS ---
+[PASS] Duplicate IP Address: No duplicate IP addresses detected in the show output.
+[PASS] Subnet Mask: No suspicious subnet mask patterns detected.
+[PASS] Gateway Mismatch: No gateway/SVI IP pair found to compare (check not applicable to this case).
+[PASS] Interface Down: No down/administratively down/err-disabled interfaces detected.
+[PASS] Missing VLAN: No inactive VLAN references detected.
+[PASS] Missing Routes: No routing table output present to evaluate (check not applicable to this case).
+
+--- Case C028: NAT ---
+[FAIL] Duplicate IP Address: IP address(es) appear more than once in the output: 0.0.0.255
+[PASS] Subnet Mask: No suspicious subnet mask patterns detected.
+[PASS] Gateway Mismatch: No gateway/SVI IP pair found to compare (check not applicable to this case).
+[PASS] Interface Down: No down/administratively down/err-disabled interfaces detected.
+[PASS] Missing VLAN: No inactive VLAN references detected.
+[PASS] Missing Routes: No routing table output present to evaluate (check not applicable to this case).
+
+--- Case C029: Default Gateway ---
+[PASS] Duplicate IP Address: No duplicate IP addresses detected in the show output.
+[PASS] Subnet Mask: No suspicious subnet mask patterns detected.
+[PASS] Gateway Mismatch: No gateway/SVI IP pair found to compare (check not applicable to this case).
+[PASS] Interface Down: No down/administratively down/err-disabled interfaces detected.
+[PASS] Missing VLAN: No inactive VLAN references detected.
+[PASS] Missing Routes: All expected subnets appear to be present in the routing table.
+
+--- Case C030: Wireless ---
+[PASS] Duplicate IP Address: No duplicate IP addresses detected in the show output.
+[PASS] Subnet Mask: No suspicious subnet mask patterns detected.
+[PASS] Gateway Mismatch: No gateway/SVI IP pair found to compare (check not applicable to this case).
+[PASS] Interface Down: No down/administratively down/err-disabled interfaces detected.
+[PASS] Missing VLAN: No inactive VLAN references detected.
+[PASS] Missing Routes: No routing table output present to evaluate (check not applicable to this case).
