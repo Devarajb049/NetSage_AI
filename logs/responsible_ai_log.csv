@@ -13,3 +13,4 @@ timestamp,case_id,ai_root_cause,ai_confidence,expected_fault,comparison_result,r
 2026-08-22 08:37:32,C016,"OSPF neighbor adjacency has failed, likely due to area, timer, authentication, or ACL mismatch.",Medium,"OSPF DR/BDR election failure, likely due to interface priority set to 0 on both routers",Partial Match,Accepted,,
 2026-08-22 08:39:55,C006,"Voice VLAN 50 is not configured on access interface Fa0/10, so IP phones cannot join the voice VLAN and obtain DHCP addresses.",0.92,Missing VLAN - voice VLAN 50 not configured on the access port,Match,Rejected,NTG,NTG
 2026-08-22 08:41:57,C003,Unable to confidently determine a specific root cause from the available evidence.,Low,"Wrong subnet mask configured on PC-D (should be /24, is /25)",-,Accepted,,
+2026-08-22 08:57:02,C005,Duplex mismatch between two connected devices is causing collisions and errors.,Medium,Interface Fa0/5 administratively down (shutdown),No Match,Accepted,,
