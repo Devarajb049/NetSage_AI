@@ -12,73 +12,120 @@ import plotly.express as px
 
 
 def cases_by_concept_tag_chart(cases_df: pd.DataFrame):
-    """Bar chart: number of cases per concept_tag (issue type)."""
+    """Bar chart: number of cases per concept_tag (issue type), sorted alphabetically."""
     counts = cases_df["concept_tag"].value_counts().reset_index()
     counts.columns = ["concept_tag", "count"]
+    counts = counts.sort_values("concept_tag")
     fig = px.bar(
         counts, x="concept_tag", y="count",
-        title="Cases by Issue Type / Concept Tag",
-        labels={"concept_tag": "Concept Tag", "count": "Number of Cases"},
+        title="Cases by Concept Tag",
+        labels={"concept_tag": "", "count": ""},
+        color_discrete_sequence=["#2563eb"]
     )
-    fig.update_layout(xaxis_tickangle=-40, margin=dict(t=50, b=120))
+    fig.update_layout(
+        plot_bgcolor="#ffffff",
+        paper_bgcolor="#ffffff",
+        xaxis_tickangle=-45,
+        margin=dict(t=50, b=120, l=40, r=20),
+        font=dict(family="Inter, sans-serif", size=12, color="#0f172a"),
+        yaxis=dict(
+            range=[0, 3.2],
+            dtick=0.5,
+            gridcolor="#e2e8f0",
+            zerolinecolor="#e2e8f0"
+        ),
+        xaxis=dict(gridcolor="#e2e8f0")
+    )
+    fig.update_traces(marker_color="#2563eb")
     return fig
 
 
 def cases_by_severity_chart(cases_df: pd.DataFrame):
-    """Pie chart: number of cases per severity level."""
+    """Donut chart: number of cases per severity level."""
     counts = cases_df["severity"].value_counts().reset_index()
     counts.columns = ["severity", "count"]
-    # Keep a sensible severity order when present
-    order = ["Critical", "High", "Medium", "Low"]
+    order = ["High", "Low", "Medium"]
     counts["severity"] = pd.Categorical(counts["severity"], categories=order, ordered=True)
-    counts = counts.sort_values("severity")
+    counts = counts.sort_values("severity").dropna()
     fig = px.pie(
         counts, names="severity", values="count",
         title="Cases by Severity",
+        hole=0.55,
         color="severity",
         color_discrete_map={
-            "Critical": "#b30000", "High": "#e6550d",
-            "Medium": "#fdae6b", "Low": "#31a354",
+            "High": "#ef4444",
+            "Low": "#f59e0b",
+            "Medium": "#22c55e",
         },
+    )
+    fig.update_layout(
+        plot_bgcolor="#ffffff",
+        paper_bgcolor="#ffffff",
+        font=dict(family="Inter, sans-serif", size=12, color="#0f172a"),
+        margin=dict(t=50, b=40, l=20, r=20),
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
     )
     return fig
 
 
 def review_status_chart(review_log_df: pd.DataFrame):
-    """Bar chart: count of Accepted / Edited / Rejected human reviews."""
+    """Donut chart: count of Accepted / Edited / Rejected human reviews."""
     if review_log_df.empty:
         return None
     counts = review_log_df["review_status"].value_counts().reset_index()
     counts.columns = ["review_status", "count"]
-    fig = px.bar(
-        counts, x="review_status", y="count",
-        title="Human Review Outcomes",
-        labels={"review_status": "Review Status", "count": "Number of Reviews"},
+    order = ["Accepted", "Edited", "Rejected"]
+    counts["review_status"] = pd.Categorical(counts["review_status"], categories=order, ordered=True)
+    counts = counts.sort_values("review_status").dropna()
+    fig = px.pie(
+        counts, names="review_status", values="count",
+        title="Review Outcome Breakdown",
+        hole=0.55,
         color="review_status",
-        color_discrete_map={"Accepted": "#31a354", "Edited": "#fdae6b", "Rejected": "#e34a33"},
+        color_discrete_map={"Accepted": "#22c55e", "Edited": "#f59e0b", "Rejected": "#ef4444"},
+    )
+    fig.update_layout(
+        plot_bgcolor="#ffffff",
+        paper_bgcolor="#ffffff",
+        font=dict(family="Inter, sans-serif", size=12, color="#0f172a"),
+        margin=dict(t=50, b=40, l=20, r=20),
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
     )
     return fig
 
 
 def agreement_rate_chart(review_log_df: pd.DataFrame):
-    """Pie chart: AI-vs-human agreement rate based on the comparison_result column."""
-    if review_log_df.empty or "comparison_result" not in review_log_df.columns:
+    """Donut chart: AI-vs-human agreement rate based on review log status / comparison."""
+    if review_log_df.empty:
         return None
-    counts = review_log_df["comparison_result"].value_counts().reset_index()
-    counts.columns = ["comparison_result", "count"]
+    
+    accepted = (review_log_df["review_status"] == "Accepted").sum()
+    others = len(review_log_df) - accepted
+    df_agreed = pd.DataFrame([
+        {"Status": "Agreed (Accepted)", "count": accepted},
+        {"Status": "Disagreed (Edited/Rejected)", "count": others}
+    ])
     fig = px.pie(
-        counts, names="comparison_result", values="count",
-        title="AI vs Expected Fault Agreement",
-        color="comparison_result",
-        color_discrete_map={"Match": "#31a354", "Partial Match": "#fdae6b", "No Match": "#e34a33"},
+        df_agreed, names="Status", values="count",
+        title="AI vs Human Agreement Rate",
+        hole=0.55,
+        color="Status",
+        color_discrete_map={"Agreed (Accepted)": "#22c55e", "Disagreed (Edited/Rejected)": "#ef4444"},
+    )
+    fig.update_layout(
+        plot_bgcolor="#ffffff",
+        paper_bgcolor="#ffffff",
+        font=dict(family="Inter, sans-serif", size=12, color="#0f172a"),
+        margin=dict(t=50, b=40, l=20, r=20),
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
     )
     return fig
 
 
 def compute_agreement_percentage(review_log_df: pd.DataFrame) -> float:
-    """Returns the percentage (0-100) of logged reviews where the AI got a full 'Match'."""
-    if review_log_df.empty or "comparison_result" not in review_log_df.columns:
+    """Returns the percentage (0-100) of logged reviews where the AI got an Accepted / Match decision."""
+    if review_log_df.empty:
         return 0.0
     total = len(review_log_df)
-    matches = (review_log_df["comparison_result"] == "Match").sum()
-    return round((matches / total) * 100, 1) if total else 0.0
+    accepted = (review_log_df["review_status"] == "Accepted").sum()
+    return round((accepted / total) * 100, 1) if total else 0.0

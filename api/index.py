@@ -125,15 +125,19 @@ def api_dashboard():
     cases_df = load_cases_df()
     reviews_df = load_review_log_df()
 
-    # Cases by Concept/Tag
+    # Cases by Concept/Tag (alphabetically sorted)
     concept_counts = {}
     if "concept_tag" in cases_df.columns:
-        concept_counts = cases_df["concept_tag"].value_counts().to_dict()
+        s_concept = cases_df["concept_tag"].value_counts().sort_index()
+        concept_counts = s_concept.to_dict()
 
-    # Cases by Severity
+    # Cases by Severity (High, Low, Medium order)
     severity_counts = {}
     if "severity" in cases_df.columns:
-        severity_counts = cases_df["severity"].value_counts().to_dict()
+        s_sev = cases_df["severity"].value_counts()
+        for sev in ["High", "Low", "Medium"]:
+            if sev in s_sev:
+                severity_counts[sev] = int(s_sev[sev])
 
     # Review status
     review_status_counts = {}
@@ -142,9 +146,9 @@ def api_dashboard():
 
     # Agreement rate
     total_reviews = len(reviews_df)
-    accepted_reviews = len(reviews_df[reviews_df["review_status"] == "Accepted"]) if total_reviews > 0 else 0
-    edited_reviews = len(reviews_df[reviews_df["review_status"] == "Edited"]) if total_reviews > 0 else 0
-    rejected_reviews = len(reviews_df[reviews_df["review_status"] == "Rejected"]) if total_reviews > 0 else 0
+    accepted_reviews = int((reviews_df["review_status"] == "Accepted").sum()) if total_reviews > 0 else 0
+    edited_reviews = int((reviews_df["review_status"] == "Edited").sum()) if total_reviews > 0 else 0
+    rejected_reviews = int((reviews_df["review_status"] == "Rejected").sum()) if total_reviews > 0 else 0
     agreement_rate = round((accepted_reviews / total_reviews * 100), 1) if total_reviews > 0 else 0.0
 
     return jsonify({
@@ -158,6 +162,7 @@ def api_dashboard():
         "severity_counts": severity_counts,
         "review_status_counts": review_status_counts
     })
+
 
 PERFECT_RESPONSIVE_TEMPLATE = """
 <!DOCTYPE html>
@@ -1117,6 +1122,7 @@ PERFECT_RESPONSIVE_TEMPLATE = """
       });
       alert(`Review saved for case ${currentCase.case_id} — status: ${status}`);
       loadAuditLogs();
+      loadDashboard();
     }
 
     async function loadAuditLogs() {
@@ -1165,33 +1171,83 @@ PERFECT_RESPONSIVE_TEMPLATE = """
         type: 'bar',
         data: {
           labels: Object.keys(data.concept_counts),
-          datasets: [{ data: Object.values(data.concept_counts), backgroundColor: '#2563eb' }]
+          datasets: [{
+            label: 'Cases',
+            data: Object.values(data.concept_counts),
+            backgroundColor: '#2563eb',
+            borderRadius: 3
+          }]
         },
         options: {
           responsive: true,
           plugins: { legend: { display: false } },
-          scales: { x: { grid: { color: '#e2e8f0' } }, y: { grid: { color: '#e2e8f0' } } }
+          scales: {
+            x: {
+              grid: { color: '#e2e8f0' },
+              ticks: { maxRotation: 45, minRotation: 45, font: { family: 'Inter, sans-serif', size: 11 } }
+            },
+            y: {
+              min: 0,
+              max: 3.0,
+              ticks: { stepSize: 0.5, font: { family: 'Inter, sans-serif', size: 11 } },
+              grid: { color: '#e2e8f0' }
+            }
+          }
         }
       });
 
       const ctxS = document.getElementById('chartSeverity').getContext('2d');
+      const sevColors = { 'High': '#ef4444', 'Low': '#f59e0b', 'Medium': '#22c55e' };
+      const sevLabels = Object.keys(data.severity_counts);
+      const sevData = Object.values(data.severity_counts);
+      const sevBg = sevLabels.map(l => sevColors[l] || '#3b82f6');
       chartSev = new Chart(ctxS, {
         type: 'doughnut',
         data: {
-          labels: Object.keys(data.severity_counts),
-          datasets: [{ data: Object.values(data.severity_counts), backgroundColor: ['#ef4444', '#f59e0b', '#22c55e', '#3b82f6'] }]
+          labels: sevLabels,
+          datasets: [{
+            data: sevData,
+            backgroundColor: sevBg,
+            borderWidth: 2,
+            borderColor: '#ffffff'
+          }]
         },
-        options: { responsive: true }
+        options: {
+          responsive: true,
+          cutout: '55%',
+          plugins: {
+            legend: {
+              position: 'top',
+              align: 'end',
+              labels: { font: { family: 'Inter, sans-serif', size: 12 }, usePointStyle: true, boxWidth: 8 }
+            }
+          }
+        }
       });
 
       const ctxO = document.getElementById('chartReviewOutcome').getContext('2d');
       chartOutcome = new Chart(ctxO, {
-        type: 'pie',
+        type: 'doughnut',
         data: {
           labels: ['Accepted', 'Edited', 'Rejected'],
-          datasets: [{ data: [data.accepted_reviews, data.edited_reviews, data.rejected_reviews], backgroundColor: ['#22c55e', '#f59e0b', '#ef4444'] }]
+          datasets: [{
+            data: [data.accepted_reviews, data.edited_reviews, data.rejected_reviews],
+            backgroundColor: ['#22c55e', '#f59e0b', '#ef4444'],
+            borderWidth: 2,
+            borderColor: '#ffffff'
+          }]
         },
-        options: { responsive: true }
+        options: {
+          responsive: true,
+          cutout: '55%',
+          plugins: {
+            legend: {
+              position: 'top',
+              align: 'end',
+              labels: { font: { family: 'Inter, sans-serif', size: 12 }, usePointStyle: true, boxWidth: 8 }
+            }
+          }
+        }
       });
 
       const ctxA = document.getElementById('chartAgreement').getContext('2d');
@@ -1199,11 +1255,27 @@ PERFECT_RESPONSIVE_TEMPLATE = """
         type: 'doughnut',
         data: {
           labels: ['Agreed (Accepted)', 'Disagreed'],
-          datasets: [{ data: [data.accepted_reviews, data.total_reviews - data.accepted_reviews], backgroundColor: ['#22c55e', '#ef4444'] }]
+          datasets: [{
+            data: [data.accepted_reviews, data.total_reviews - data.accepted_reviews],
+            backgroundColor: ['#22c55e', '#ef4444'],
+            borderWidth: 2,
+            borderColor: '#ffffff'
+          }]
         },
-        options: { responsive: true }
+        options: {
+          responsive: true,
+          cutout: '55%',
+          plugins: {
+            legend: {
+              position: 'top',
+              align: 'end',
+              labels: { font: { family: 'Inter, sans-serif', size: 12 }, usePointStyle: true, boxWidth: 8 }
+            }
+          }
+        }
       });
     }
+
 
     window.onload = init;
   </script>
