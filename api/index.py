@@ -3,7 +3,7 @@ import csv
 import json
 from datetime import datetime
 import pandas as pd
-from flask import Flask, jsonify, request, render_template_string
+from flask import Flask, jsonify, request, render_template_string, send_from_directory
 
 # Import existing domain logic
 from ai.diagnosis import get_ai_diagnosis
@@ -16,6 +16,11 @@ HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CASES_CSV = os.path.join(HERE, "data", "cases.csv")
 LOG_CSV = os.path.join(HERE, "logs", "responsible_ai_log.csv")
 LOG_DIR = os.path.dirname(LOG_CSV)
+
+@app.route("/assets/<path:filename>")
+def serve_assets(filename):
+    assets_dir = os.path.join(HERE, "assets")
+    return send_from_directory(assets_dir, filename)
 
 LOG_FIELDNAMES = [
     "timestamp", "case_id", "ai_root_cause", "ai_confidence",
@@ -153,8 +158,10 @@ HTML_TEMPLATE = """
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NetSage AI - Cisco Troubleshooting System</title>
+  <link rel="icon" type="image/png" href="/assets/logo.png">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
   <style>
     :root {
       --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
@@ -299,14 +306,18 @@ HTML_TEMPLATE = """
 <body>
 
   <div class="header">
-    <div>
-      <h1>🛰️ NetSage AI</h1>
-      <p>AI-Assisted Cisco Network Troubleshooting System & Audit Dashboard</p>
+    <div style="display: flex; align-items: center; gap: 1rem;">
+      <img src="/assets/logo.png" alt="NetSage AI Logo" style="height: 52px; width: 52px; border-radius: 10px; background: #ffffff; padding: 4px; border: 1px solid var(--card-border); box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+      <div>
+        <h1>NetSage AI</h1>
+        <p>AI-Assisted Cisco Network Troubleshooting System — Deva Raj Bhojanapu</p>
+      </div>
     </div>
-    <div style="font-size: 0.85rem; color: var(--text-muted);">
-      Vercel Serverless Ready
+    <div style="font-size: 0.85rem; color: #818cf8; background: rgba(99,102,241,0.15); padding: 0.4rem 0.8rem; border-radius: 20px; border: 1px solid rgba(99,102,241,0.3); font-weight: 500;">
+      ⚡ Vercel Serverless Ready
     </div>
   </div>
+
 
   <div class="nav-tabs">
     <div class="nav-tab active" onclick="switchTab('explorer')">🔍 Case Explorer</div>
