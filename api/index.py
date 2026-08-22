@@ -750,7 +750,7 @@ PERFECT_RESPONSIVE_TEMPLATE = """
           <div class="st-code" id="ai-cmd" style="padding: 0.5rem 0.8rem; margin-bottom: 1rem;">-</div>
 
           <p style="margin-bottom: 0.4rem;"><strong>Fix Steps:</strong></p>
-          ol id="ai-steps" style="margin-left: 1.5rem; margin-bottom: 1.5rem; line-height: 1.6;"></ol>
+          <ol id="ai-steps" style="margin-left: 1.5rem; margin-bottom: 1.5rem; line-height: 1.6;"></ol>
 
           <div class="st-alert st-warning">
             <i data-lucide="alert-triangle"></i>
