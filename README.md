@@ -74,6 +74,18 @@ mocked for this version.
 
 ---
 
+## Vercel Deployment
+
+This project includes native Vercel Serverless Function support via `api/index.py` and `vercel.json`.
+
+1. **Deploy via Vercel CLI:**
+   ```bash
+   vercel
+   ```
+2. Or import this GitHub repository (`Devarajb049/NetSage_AI`) directly into your Vercel Dashboard. Vercel will automatically detect `vercel.json` and deploy the full serverless API & dashboard!
+
+---
+
 ## How the "AI" works right now (and how to upgrade it later)
 
 `ai/diagnosis.py` contains a **mock AI function**, `get_ai_diagnosis()`.
