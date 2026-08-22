@@ -1,9 +1,14 @@
 import os
+import sys
 import csv
 import json
 from datetime import datetime
 import pandas as pd
 from flask import Flask, jsonify, request, render_template_string, send_from_directory
+
+HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if HERE not in sys.path:
+    sys.path.insert(0, HERE)
 
 # Import existing domain logic
 from ai.diagnosis import get_ai_diagnosis
@@ -12,7 +17,6 @@ from checker.rule_checker import run_all_checks
 
 app = Flask(__name__)
 
-HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CASES_CSV = os.path.join(HERE, "data", "cases.csv")
 LOG_CSV = os.path.join(HERE, "logs", "responsible_ai_log.csv")
 LOG_DIR = os.path.dirname(LOG_CSV)
