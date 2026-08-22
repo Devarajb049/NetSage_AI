@@ -62,17 +62,22 @@ def load_cases() -> pd.DataFrame:
 
 
 def load_review_log() -> pd.DataFrame:
-    """Load the responsible AI review log from CSV (not cached, since it changes at runtime)."""
+    """Load the responsible AI review log from CSV sorted by timestamp (most recent first)."""
     if not os.path.exists(LOG_CSV) or os.path.getsize(LOG_CSV) == 0:
         return pd.DataFrame(columns=LOG_FIELDNAMES)
     try:
-        return pd.read_csv(LOG_CSV, dtype=str).fillna("")
+        df = pd.read_csv(LOG_CSV, dtype=str).fillna("")
     except pd.errors.ParserError:
         # If the CSV file is malformed, try a more forgiving fallback.
         with open(LOG_CSV, newline="", encoding="utf-8") as f:
             reader = csv.DictReader(f)
             rows = [row for row in reader]
-        return pd.DataFrame(rows, columns=LOG_FIELDNAMES).fillna("")
+        df = pd.DataFrame(rows, columns=LOG_FIELDNAMES).fillna("")
+
+    if "timestamp" in df.columns and not df.empty:
+        df = df.sort_values(by="timestamp", ascending=False)
+    return df
+
 
 
 def append_review_log(row: dict):
@@ -350,7 +355,8 @@ with tabs[4]:
     if log_df.empty:
         st.info("No reviews logged yet.")
     else:
-        st.dataframe(log_df.iloc[::-1], use_container_width=True, hide_index=True)
+        st.dataframe(log_df, use_container_width=True, hide_index=True)
+
 
 # =======================================================================
 # TAB 6 - DASHBOARD

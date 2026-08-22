@@ -32,12 +32,17 @@ def load_review_log_df():
     if not os.path.exists(LOG_CSV) or os.path.getsize(LOG_CSV) == 0:
         return pd.DataFrame(columns=LOG_FIELDNAMES)
     try:
-        return pd.read_csv(LOG_CSV, dtype=str).fillna("")
+        df = pd.read_csv(LOG_CSV, dtype=str).fillna("")
     except Exception:
         with open(LOG_CSV, newline="", encoding="utf-8") as f:
             reader = csv.DictReader(f)
             rows = [row for row in reader]
-        return pd.DataFrame(rows, columns=LOG_FIELDNAMES).fillna("")
+        df = pd.DataFrame(rows, columns=LOG_FIELDNAMES).fillna("")
+
+    if "timestamp" in df.columns and not df.empty:
+        df = df.sort_values(by="timestamp", ascending=False)
+    return df
+
 
 def append_review_log(row_dict):
     os.makedirs(LOG_DIR, exist_ok=True)
@@ -591,7 +596,8 @@ HTML_TEMPLATE = """
       const logs = await res.json();
       const tbody = document.querySelector('#auditTable tbody');
       tbody.innerHTML = '';
-      logs.slice(-10).reverse().forEach(l => {
+      logs.slice(0, 10).forEach(l => {
+
         const tr = document.createElement('tr');
         tr.innerHTML = `<td>${l.timestamp}</td><td>${l.case_id}</td><td>${l.ai_root_cause}</td><td><span class="badge badge-low">${l.review_status}</span></td><td>${l.reviewer_notes}</td>`;
         tbody.appendChild(tr);
